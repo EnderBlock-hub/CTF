@@ -14,6 +14,8 @@
 # same slot (about 1 in 24), the loaded keys are exact complements and the
 # decrypt oracle returns ~FLAG.
 
+import sys
+
 from pwn import *
 
 # complement multisets: 0x00 <-> 0xFF and the odd pair 0x02 <-> 0xFD
@@ -25,7 +27,12 @@ def flip(data):
     return bytes(b ^ 0xFF for b in data)
 
 
-io = remote("HOST", PORT, ssl=True)
+# pass the instance as:  python solve.py <host> <port>
+host = sys.argv[1] if len(sys.argv) > 1 else "HOST"
+port = int(sys.argv[2]) if len(sys.argv) > 2 else 1337
+
+# the FortID instance speaks TLS, so wrap the connection
+io = remote(host, port, ssl=True)
 
 for attempt in range(1, 500):
     io.sendlineafter(b"C:\\> ", b"KEYB")

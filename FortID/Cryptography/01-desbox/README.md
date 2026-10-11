@@ -123,7 +123,8 @@ B = bytes([0xFD] + [0xFF] * 23)
 def flip(data):
     return bytes(b ^ 0xFF for b in data)
 
-io = remote("HOST", PORT)
+# the FortID instance speaks TLS, so wrap the socket
+io = remote("HOST", 1337, ssl=True)
 
 for attempt in range(1, 500):
     io.sendlineafter(b"C:\\> ", b"KEYB")
@@ -146,10 +147,12 @@ for attempt in range(1, 500):
 
 ## Running it
 
-Point `remote(...)` at the live instance and run the script. Most of the time it finishes well inside the service's 2-minute limit:
+Pass the instance host and port on the command line (the socket is wrapped in TLS). Most of the time it finishes well inside the service's 2-minute limit:
 
 ```
-[+] Opening connection to HOST on port PORT: Done
+python solve.py desbox-<id>.inst<n>.ctf.fortid.com 1337
+
+[+] Opening connection to desbox-<id>.inst<n>.ctf.fortid.com on port 1337: Done
 [+] recovered after 19 tries
 FortID{...}
 ```
