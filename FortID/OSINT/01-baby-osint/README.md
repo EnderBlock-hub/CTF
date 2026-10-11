@@ -1,70 +1,82 @@
 # Baby OSINT
 
-| Поле | Значение |
+| Field | Value |
 |---|---|
-| Платформа | FortID CTF |
-| Категория | OSINT |
-| Файл задания | [`handout.jpeg`](handout.jpeg) |
-| Статус | Решено |
-| Флаг | `FortID{hod...tsku:zeg...ge:wed...day:9...9}` (masked) |
+| Platform | FortID CTF |
+| Category | OSINT |
+| Challenge file | [`handout.jpeg`](handout.jpeg) |
+| Status | Solved |
+| Flag | `FortID{hod...tsku:zeg...ge:wed...day:9...9}` (masked) |
 
-## Условие
+## Challenge
 
-![Фотография из условия](handout.jpeg)
+![Challenge photograph](handout.jpeg)
 
-На фотографии показана большая акция в центре Загреба. Нужно было ответить на четыре вопроса:
+The photograph shows a large public gathering in a city centre. The challenge asks four questions:
 
-1. Как называлось мероприятие на фотографии?
-2. Какой гастрономический фестиваль проходил в Загребе в тот же день и получил публичную поддержку организаторов акции?
-3. В какой день недели было больше всего поездок на новых городских велосипедах?
-4. Какое максимальное число этих велосипедов одновременно зафиксировали в одном месте?
+1. What was the exact name of the event in the photograph?
+2. Which food festival was taking place in Zagreb on the same date, and whose organisers publicly supported the event?
+3. Which day of the week had the highest average number of rides on the newly introduced public bicycles?
+4. What was the largest number of those bicycles recorded at one location at the same time?
 
-Ответы нужно было привести к нижнему регистру, заменить пробелы на подчёркивания и убрать пунктуацию.
+The flag format requires lowercase English letters, underscores instead of spaces, and no punctuation inside each answer.
 
-## 1. Что можно понять по самой фотографии
+## 1. Reading the photograph
 
-На правой стороне кадра видна табличка `Pješačka zona`, то есть «пешеходная зона». Архитектура и язык указывают на Хорватию, а по городскому окружению это Загреб.
+The sign on the right contains the Croatian text `Pješačka zona`, meaning "pedestrian zone". The language, architecture, street furniture and dense central-city setting point to Croatia, and more specifically to Zagreb.
 
-На плакатах в толпе читается слово `LIKA`. Это полезная зацепка: Lika - исторический регион Хорватии, а не название случайного концерта или политической партии. Поэтому я искал загребскую акцию с названием, связанным с Ликой.
+The most useful visual clue is the word `LIKA` on a placard in the crowd. Lika is a historical region of Croatia. That made it more productive to search for a Croatian public event connected with Lika than to search for a generic protest or festival in Zagreb.
 
-## 2. Название акции
+The image itself does not provide a complete readable event title. It provides the location, language and one distinctive keyword, so the rest of the solve is an OSINT pivot from those clues.
 
-Поиск по сочетаниям `Lika`, `Zagreb`, `hodaj` и фотографии вывел на акцию **Hodaj za Liku, hodaj za Hrvatsku** - «Шагай за Лику, шагай за Хорватию».
+## 2. Identifying the event
 
-Это и есть первый ответ. Для формата флага:
+I searched combinations of `Lika`, `Zagreb`, `hodaj` and Croatian event terminology, then compared the results with the scene in the photograph. This led to **Hodaj za Liku, hodaj za Hrvatsku**, which translates roughly as "Walk for Lika, walk for Croatia".
 
-Найденное значение: `hod...tsku` (masked).
+The wording matches the clue on the placards and the scale of the gathering. The first answer is therefore the event's official name, normalised as one lowercase underscore-separated string.
 
-Важно сохранить хорватское написание `Hrvatsku`, а при нормализации использовать только английские латинские буквы и нижний регистр.
+Masked answer: `hod...tsku`
 
-## 3. Фестиваль в тот же день
+The important detail is to keep the Croatian spelling `Hrvatsku` before applying the flag normalisation. Translating the title into English would produce the wrong answer.
 
-Дальше я проверил новости и страницы организаций, которые участвовали в акции. В публикациях о мероприятии рядом с датой акции упоминался связанный гастрономический фестиваль.
+## 3. Finding the food festival
 
-Организаторы фестиваля публично поддержали акцию. Это связывает его с условием задачи лучше, чем просто совпадение по месту: нужен был именно фестиваль, проходивший в Загребе в тот же день и поддержавший мероприятие.
+The second question is more specific than "what else happened in Zagreb?" It asks for a food festival held on the same date, nearby, whose organisers publicly supported the event from the photograph.
 
-Найденное значение: `zeg...ge` (masked).
+I followed the event coverage and checked the organisations mentioned around the date. Their publications connected the event with a Zagreb food festival. This cross-check matters because many festivals can match the city and date, while the organisers' public statement provides the identifying link required by the challenge.
 
-## 4. День с наибольшим числом поездок
+Masked answer: `zeg...ge`
 
-Третья часть относится к новым загребским городским велосипедам. В условии дана ссылка на видео, где мэр пытается проехать на таком велосипеде. По публикациям оператора системы и связанным статистическим материалам я сравнил среднее число поездок по дням недели.
+## 4. Determining the busiest weekday
 
-Наибольшее среднее значение приходится на один конкретный день недели. Найденное значение: `wed...day` (masked).
+The third clue points to Zagreb's public bicycle system. The challenge links a video of the mayor trying one of the newly introduced bicycles, which identifies the relevant system and time period.
 
-## 5. Максимальное число велосипедов в одной точке
+I compared the available ride statistics by weekday instead of using a single daily total. The question asks for the largest **average** number of rides, so a raw record from one unusually busy day would not be enough. The highest average corresponds to one weekday.
 
-Здесь легко перепутать два близких числа из разных временных выборок. Для задания нужно значение из публикации, описывающей нужное событие. Найденное значение: `9...9` (masked).
+Masked answer: `wed...day`
 
-## Итог
+## 5. Counting bicycles at one location
 
-Все четыре значения подтверждены по открытым источникам. Сам ответ намеренно не публикуется, чтобы writeup не раскрывал решение целиком.
+The final question asks for a simultaneous location count, which is a different metric from total rides or the number of people attending an event. I checked the event-related bicycle report and used the number stated for the relevant snapshot.
 
-## Источники
+There is a second, similar-looking peak value in another dataset, but it belongs to a different time window. Mixing the two gives a wrong, rejected flag, so I took the figure tied to this event and date.
 
-- [Prijatelji životinja - материал об акции и поддержке фестиваля](https://www.prijatelji-zivotinja.hr/index.hr.php?id=5285)
-- [Index.hr - данные о велосипедах и числе участников/велосипедов](https://www.index.hr/fit/clanak/vise-od-900-ljudi-na-inmusic-doslo-bajsom/2805907.aspx)
-- [Bajs - статистика событий](https://bajs.informacija.hr/events)
+Masked answer: `9...9`
 
-## Короткий вывод
+## Result
 
-Фотография дала место и ключевое слово `LIKA`. Через поиск по хорватским названиям нашлось мероприятие, затем по публикациям организаторов - связанный гастрономический фестиваль. Последние два поля потребовали сверить статистику городской велосистемы и не подменить значение из нужной выборки похожим пиковым значением из другой.
+All four values were confirmed from the photograph, Croatian event coverage and the bicycle statistics. The flag is kept masked below:
+
+```text
+FortID{hod...tsku:zeg...ge:wed...day:9...9}
+```
+
+## Sources
+
+- [Prijatelji životinja - event coverage and the supporting festival](https://www.prijatelji-zivotinja.hr/index.hr.php?id=5285)
+- [Index.hr - bicycle-related event figures](https://www.index.hr/fit/clanak/vise-od-900-ljudi-na-inmusic-doslo-bajsom/2805907.aspx)
+- [Bajs - public bicycle event statistics](https://bajs.informacija.hr/events)
+
+## Takeaways
+
+The photograph supplied three useful pivots: Croatia, Zagreb and the word `LIKA`. The first answer came from matching those clues to a Croatian event name. The second required checking organiser statements, while the last two required reading the bicycle statistics carefully and distinguishing averages and time windows from superficially similar peak numbers.
