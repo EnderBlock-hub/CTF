@@ -25,7 +25,7 @@ def flip(data):
     return bytes(b ^ 0xFF for b in data)
 
 
-io = remote("HOST", PORT)
+io = remote("HOST", PORT, ssl=True)
 
 for attempt in range(1, 500):
     io.sendlineafter(b"C:\\> ", b"KEYB")
