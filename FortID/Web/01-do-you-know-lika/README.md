@@ -4,12 +4,13 @@
 |---|---|
 | Platform | FortID CTF |
 | Category | Web |
+| Challenge source | [`server.js`](server.js), [`worker.js`](worker.js) |
 | Status | Solved locally and on the hosted instance |
 | Flag | Omitted |
 
 ## Challenge overview
 
-The application is a postcard preview service. It accepts a Handlebars template together with JSON objects for the postcard theme and model, then renders the result in a fresh Node.js worker.
+The application is a postcard preview service. It accepts a Handlebars template together with JSON objects for the postcard theme and model, then renders the result in a fresh Node.js worker. The challenge ships its full Node.js source: the request handling lives in [`server.js`](server.js), and the rendering (where the bug is) lives in [`worker.js`](worker.js), so the observations below come from reading that provided code.
 
 ## Source-code observations
 
