@@ -5,3 +5,4 @@
 ## FortID
 
 - [Baby OSINT](FortID/OSINT/01-baby-osint/README.md) - OSINT, поиск по фотографии
+- [Do You Know Lika?](FortID/Web/01-do-you-know-lika/README.md) - Web, server-side template injection
