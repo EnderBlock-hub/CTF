@@ -88,6 +88,8 @@ Open the challenge instance, paste the following into the three fields, and pres
 
 The response appears in the preview result. The flag itself is intentionally omitted from this repository.
 
+The complete copy-paste payload and a line-by-line explanation are in [`exploit.md`](exploit.md).
+
 ## Reasoning and exploitation path
 
 I first tested the normal preview request to separate application errors from the vulnerable behaviour. The server returned rendered HTML, confirming that the worker and template engine were functioning.
