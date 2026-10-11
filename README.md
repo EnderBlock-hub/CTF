@@ -4,4 +4,4 @@
 
 ## FortID
 
-- [Hodaj za Liku, hodaj za Hrvatsku](FortID/OSINT/01-hodaj-za-liku/README.md)  -  OSINT, поиск по фотографии
+- [Baby OSINT](FortID/OSINT/01-baby-osint/README.md)  -  OSINT, поиск по фотографии
