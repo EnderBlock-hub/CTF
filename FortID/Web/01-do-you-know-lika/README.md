@@ -33,16 +33,6 @@ The direct `__proto__` spelling is filtered by the server, so the useful route i
 
 Open the challenge instance, copy the three fields from [`exploit.md`](exploit.md), and press **Send to print worker**. That file contains the complete payload, the JSON objects and the detailed reasoning. The flag itself is intentionally omitted from this repository.
 
-## Reasoning and exploitation path
-
-I first tested the normal preview request to separate application errors from the vulnerable behaviour. The server returned rendered HTML, confirming that the worker and template engine were functioning.
-
-Next I compared the input validation with the worker implementation. The server filters a few obvious Handlebars constructs and rejects `__proto__`, but it still permits a user-controlled template and nested JSON objects. The recursive merge creates an opportunity to influence inherited properties without using the rejected spelling directly.
-
-The allow-list check in `setLayoutOption` was the next important clue. Because the check uses an ordinary object, changing what the worker sees through the prototype chain can make a property appear writable even when it is not an own property of the allow-list. The payload in `exploit.md` places the Handlebars prototype permissions on that chain, enabling the methods needed by the template.
-
-Finally, the worker's permission arguments explain what the challenge expects after the template-engine escape: the process may read the flag file, but the parent application does not expose that file through a normal HTTP route. The template obtains a string method's `constructor`, builds a callable function from it, and supplies the body `return process.getBuiltinModule('fs').readFileSync(process.env.FLAG_PATH, 'utf8')`. The worker executes that function and returns the file contents in the preview response. I verified this locally and then sent the same request to the hosted endpoint, which returned the actual flag.
-
 ## Lessons
 
 The vulnerability is not simply that the application accepts HTML. It is the combination of:
@@ -52,4 +42,4 @@ The vulnerability is not simply that the application accepts HTML. It is the com
 - prototype inheritance affecting security checks;
 - a worker with narrowly scoped file-read access.
 
-This is why reading both the HTTP handler and the worker was necessary. Looking only at the visible postcard page would show the input fields, but not the prototype-chain and permission boundary that made the exploit possible.
+That is why both the HTTP handler and the worker matter. The page shows the input fields, while the source explains the prototype-chain and permission boundary. Follow [`exploit.md`](exploit.md) for the detailed reasoning and the copy-paste payload.
