@@ -1,33 +1,33 @@
 # CTF writeups
 
-Разборы заданий с CTF-соревнований. По каждому заданию описан ход анализа, сама уязвимость и шаги, которыми решение воспроизводится. Флаги намеренно не публикуются.
+Writeups for CTF challenges. Each entry walks through the analysis, the underlying vulnerability, and the steps that reproduce the solution. Flags are intentionally left out.
 
 ## FortID CTF 2026
 
 ### Web
 
-| Задание | Техника |
+| Challenge | Technique |
 |---|---|
-| [Do You Know Lika?](FortID/Web/01-do-you-know-lika/README.md) | Server-side template injection в Handlebars через prototype pollution |
-| [Ultimative PHP](FortID/Web/02-ultimative-php/README.md) | Обход проверок PHP: мэнглинг имён параметров, коллизия `Array`, magic hash, object injection |
-| [Doctor Bye Bye](FortID/Web/03-doctor-bye-bye/README.md) | Blind SQL injection через `ORDER BY` на основе boolean-оракула |
+| [Do You Know Lika?](FortID/Web/01-do-you-know-lika/README.md) | Server-side template injection in Handlebars via prototype pollution |
+| [Ultimative PHP](FortID/Web/02-ultimative-php/README.md) | Chained PHP quirks: parameter name mangling, the `Array` collision, a magic hash, and object injection |
+| [Doctor Bye Bye](FortID/Web/03-doctor-bye-bye/README.md) | Blind SQL injection through `ORDER BY` using a boolean oracle |
 
 ### Cryptography
 
-| Задание | Техника |
+| Challenge | Technique |
 |---|---|
-| [DESBox](FortID/Cryptography/01-desbox/README.md) | Свойство дополнения 3DES в обход проверок ключей |
+| [DESBox](FortID/Cryptography/01-desbox/README.md) | 3DES complementation property used to bypass the key checks |
 
 ### OSINT
 
-| Задание | Техника |
+| Challenge | Technique |
 |---|---|
-| [Baby OSINT](FortID/OSINT/01-baby-osint/README.md) | Восстановление события по фотографии и перекрёстный поиск |
+| [Baby OSINT](FortID/OSINT/01-baby-osint/README.md) | Recovering the event from a photograph with cross-source pivoting |
 
-## Как устроен репозиторий
+## Repository layout
 
-Каждый разбор лежит по пути `FortID/<категория>/<задание>/`. Внутри папки:
+Each writeup lives under `FortID/<category>/<challenge>/`. Inside a folder you will find:
 
-- `README.md` - сам разбор с объяснением и шагами;
-- исходник задания, когда он помогает понять уязвимость;
-- готовый скрипт решения, если он нужен.
+- `README.md` - the writeup itself, with the reasoning and the steps;
+- the challenge source, when it helps explain the vulnerability;
+- a ready-to-run solve script, where one is needed.
