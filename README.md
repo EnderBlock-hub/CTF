@@ -1,11 +1,33 @@
 # CTF writeups
 
-Разборы решённых заданий CTF. Для каждого задания здесь описан ход поиска, использованные источники и итоговый флаг.
+Разборы заданий с CTF-соревнований. По каждому заданию описан ход анализа, сама уязвимость и шаги, которыми решение воспроизводится. Флаги намеренно не публикуются.
 
-## FortID
+## FortID CTF 2026
 
-- [Baby OSINT](FortID/OSINT/01-baby-osint/README.md) - OSINT, поиск по фотографии
-- [Do You Know Lika?](FortID/Web/01-do-you-know-lika/README.md) - Web, server-side template injection
-- [Ultimative PHP](FortID/Web/02-ultimative-php/README.md) - Web, обход проверок PHP и object injection
-- [Doctor Bye Bye](FortID/Web/03-doctor-bye-bye/README.md) - Web, blind SQL injection через ORDER BY
-- [DESBox](FortID/Cryptography/01-desbox/README.md) - Cryptography, свойство дополнения 3DES
+### Web
+
+| Задание | Техника |
+|---|---|
+| [Do You Know Lika?](FortID/Web/01-do-you-know-lika/README.md) | Server-side template injection в Handlebars через prototype pollution |
+| [Ultimative PHP](FortID/Web/02-ultimative-php/README.md) | Обход проверок PHP: мэнглинг имён параметров, коллизия `Array`, magic hash, object injection |
+| [Doctor Bye Bye](FortID/Web/03-doctor-bye-bye/README.md) | Blind SQL injection через `ORDER BY` на основе boolean-оракула |
+
+### Cryptography
+
+| Задание | Техника |
+|---|---|
+| [DESBox](FortID/Cryptography/01-desbox/README.md) | Свойство дополнения 3DES в обход проверок ключей |
+
+### OSINT
+
+| Задание | Техника |
+|---|---|
+| [Baby OSINT](FortID/OSINT/01-baby-osint/README.md) | Восстановление события по фотографии и перекрёстный поиск |
+
+## Как устроен репозиторий
+
+Каждый разбор лежит по пути `FortID/<категория>/<задание>/`. Внутри папки:
+
+- `README.md` - сам разбор с объяснением и шагами;
+- исходник задания, когда он помогает понять уязвимость;
+- готовый скрипт решения, если он нужен.
